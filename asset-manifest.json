@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/ideal-pancake/static/css/main.d1b05096.chunk.css",
+    "main.js": "/ideal-pancake/static/js/main.c070d7e2.chunk.js",
+    "main.js.map": "/ideal-pancake/static/js/main.c070d7e2.chunk.js.map",
+    "runtime-main.js": "/ideal-pancake/static/js/runtime-main.9448ee2f.js",
+    "runtime-main.js.map": "/ideal-pancake/static/js/runtime-main.9448ee2f.js.map",
+    "static/js/2.f2fe1928.chunk.js": "/ideal-pancake/static/js/2.f2fe1928.chunk.js",
+    "static/js/2.f2fe1928.chunk.js.map": "/ideal-pancake/static/js/2.f2fe1928.chunk.js.map",
+    "index.html": "/ideal-pancake/index.html",
+    "precache-manifest.e99741c1b0e3bafaffa618a07f7cb4c0.js": "/ideal-pancake/precache-manifest.e99741c1b0e3bafaffa618a07f7cb4c0.js",
+    "service-worker.js": "/ideal-pancake/service-worker.js",
+    "static/css/main.d1b05096.chunk.css.map": "/ideal-pancake/static/css/main.d1b05096.chunk.css.map",
+    "static/js/2.f2fe1928.chunk.js.LICENSE": "/ideal-pancake/static/js/2.f2fe1928.chunk.js.LICENSE",
+    "static/media/logo.svg": "/ideal-pancake/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9448ee2f.js",
+    "static/js/2.f2fe1928.chunk.js",
+    "static/css/main.d1b05096.chunk.css",
+    "static/js/main.c070d7e2.chunk.js"
+  ]
+}
