@@ -36,3 +36,64 @@
     transform: rotate(360deg);
   }
 }
+
+.square{
+  border: 1px solid grey;
+  display: inline;
+  font-size: 30px;
+  line-height: 2.5;
+  background-color: white;
+  width: 70px;
+  cursor: pointer;
+}
+.square:hover{
+  background-color: grey;
+}
+.clicked{
+  background-color: black;
+}
+
+.game{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-flow: row wrap;
+  margin: 50px auto;
+}
+.board{
+
+}
+
+.greenTriangle{
+  color: green;
+}
+
+.blueSquare{
+  color: blue;
+}
+
+.redHeart{
+  color: red;
+}
+
+.orangeCircle{
+  color: orange;
+}
+
+.yellowstar{
+  color: yellowgreen;
+}
+
+.purpleCertificate{
+  color: purple;
+}
+
+.gradientCrown{
+  color: black;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .gradientCrown {
+    animation: App-logo-spin infinite 4s linear;
+  }
+}
