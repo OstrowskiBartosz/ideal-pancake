@@ -1,4 +1,34 @@
 import React from 'react';
+/** @jsx jsx */
+import { jsx, css, keyframes } from '@emotion/core';
+
+// const bounce = keyframes`
+//   from, 20%, 53%, 80%, to {
+//     transform: translate3d(0,0,0);
+//   }
+
+//   40%, 43% {
+//     transform: translate3d(0, -30px, 0);
+//   }
+
+//   70% {
+//     transform: translate3d(0, -15px, 0);
+//   }
+
+//   90% {
+//     transform: translate3d(0,-4px,0);
+//   }
+// css={css`animation: ${bounce} 1s ease infinite;`} 
+// `
+const moveColor = keyframes`
+from {top: 0px;}
+to {top: 100px;}
+`
+
+const styles = css`
+  position: relative;
+  animation: ${moveColor} 2s infinite;
+`
 
 export default function Square(props) {
   let sign;
@@ -28,9 +58,8 @@ export default function Square(props) {
     default:
       sign = <i className="fas fa-heart redHeart"></i>;
   }
-
   return (
-    <button id={props.id} className={"square " + (props.squareClicked ? "clicked" : "")} onClick={props.onClick}>
+    <button id={props.id} className={"square " + (props.squareClicked ? "clicked" : "")} css={css`${props.styles}`} onClick={ (event) => props.onClick(event)}>
       {sign} {props.squareClicked}
     </button>
   );

@@ -40,17 +40,21 @@
 .square{
   border: 1px solid grey;
   display: inline;
-  font-size: 30px;
+  font-size: 25px;
   line-height: 2.5;
   background-color: white;
   width: 70px;
   cursor: pointer;
+  position :relative;
 }
 .square:hover{
   background-color: grey;
 }
+.square:focus {
+  outline:0 !important; 
+}
 .clicked{
-  background-color: black;
+  border: 1px solid red;
 }
 
 .game{
@@ -90,10 +94,4 @@
 
 .gradientCrown{
   color: black;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .gradientCrown {
-    animation: App-logo-spin infinite 4s linear;
-  }
 }

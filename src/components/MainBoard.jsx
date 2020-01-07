@@ -1,7 +1,31 @@
 import React, { useState, useEffect} from 'react';
-import Square from './Square.jsx'
+import Square from './Square.jsx';
+import { css, keyframes } from 'emotion';
 
-function Newcolorszzz(boardColors){
+function colorMover(firstPosition, secondPosition) {
+  let topPosition = Math.floor(secondPosition.top)-Math.floor(firstPosition.top);
+  let bottomPosition = Math.floor(secondPosition.bottom)-Math.floor(firstPosition.bottom);
+  let leftPosition = Math.floor(secondPosition.left)-Math.floor(firstPosition.left);
+  let rightPosition = Math.floor(secondPosition.right)-Math.floor(firstPosition.right);
+  const moveColor = keyframes`
+  from {
+        top:0px; 
+        bottom:0px; 
+        left:0px; 
+        right:0px;
+      }
+  to {
+        top:${topPosition}px; 
+        bottom:${bottomPosition}px; 
+        left:${leftPosition}px; 
+        right:${rightPosition}px;
+      }
+  `
+  const styles = `animation: ${moveColor} 1s;`
+  return styles;
+}
+
+function randomNumberToColor(boardColors){
   let modifiedBoardColors = boardColors;
   for(let number in boardColors){
     switch (true){
@@ -33,31 +57,35 @@ function Newcolorszzz(boardColors){
   return modifiedBoardColors;
 }
 
+function setNewColors(boardColors){
+  let modifiedBoardColors = boardColors;
+  for(let number in boardColors){
+    if(boardColors[number] === null){
+      modifiedBoardColors[number] = Math.floor(Math.random() * 61) + 20;
+    }
+  }
+  return modifiedBoardColors;
+}
+
 const Board = () => {
   
-  const [boardColors, setBoardColors] = useState(Array.from({length: 100}, () => Math.floor(Math.random() * 61) + 20));
-  useEffect(() => {
-    let modifiedBoardColors = Newcolorszzz(boardColors);
-    setBoardColors(modifiedBoardColors);
-  }, [boardColors]);
-
+  const [boardColors, setBoardColors] = useState(randomNumberToColor(Array.from({length: 100}, () => Math.floor(Math.random() * 61) + 20)));
+  const [boardMovers, setBoardMovers] = useState(Array(100).fill(""));
   const [boardClicks, setBoardClicks] = useState(Array(100).fill(false));
   const [first, setFirst] = useState(null);
+  const [firstPosition, setFirstPosition] = useState(null);
   const [second, setSecond] = useState(null);
+  const [secondPosition, setSecondPosition] = useState(null);
   const [next, setNext] = useState(0);
 
-  function RenderSquare(i){
-    return(
-    <Square id={i} sign={boardColors[i]} squareClicked={boardClicks[i]} onClick={() => handleSquareClick(i)}/>
-    );
-  }
-
-  function handleSquareClick(i) 
-  {
+  function handleSquareClick(i, event) {
     if(next === 0){
       setFirst(i);
       setSecond(null);
       setBoardColors(boardColors);
+
+      var rect = event.currentTarget.getBoundingClientRect();
+      setFirstPosition(rect);
 
       let modifiedBoardClicks = boardClicks;
       modifiedBoardClicks[i] = true;
@@ -66,40 +94,64 @@ const Board = () => {
     }else if(next === 1){
       setFirst(first);
       setSecond(i);
-      setBoardColors(boardColors);
+
+
+      var rect = event.currentTarget.getBoundingClientRect();    
+      setSecondPosition(rect);
 
       let modifiedBoardClicks = boardClicks;
       modifiedBoardClicks[i] = true;
       setBoardClicks(modifiedBoardClicks);
       setNext(2);
-      if(
-         i === first + 1
-      || i === first - 1
-      || i === first - 10
-      || i === first + 10
-      ){
-        Transition(i);
-      }
-      else{
+      if(i === first + 1 || i === first - 1 || i === first - 10 || i === first + 10){
+        Transition(i, rect);
+      }else{
         failedTransition(); // THINK ABOUT THIS
       }
-       
     };
   }
 
-  function Transition(i) 
+  function Transition(i, rect) 
   {
-    let modifiedBoardColors = boardColors;
-    let helper = modifiedBoardColors[first];
-    modifiedBoardColors[first] = boardColors[i];
-    modifiedBoardColors[i] = helper;
-    setFirst(null);
-    setSecond(null);
-    setBoardColors(modifiedBoardColors);
-    setBoardClicks(Array(100).fill(false));
-    setNext(0);
-    checkColors(i);
+    let modifiedBoardMovers = boardMovers;
+    modifiedBoardMovers[first] = colorMover(firstPosition, rect);
+    modifiedBoardMovers[i] = colorMover(rect, firstPosition);
+    setBoardMovers(modifiedBoardMovers);
+
+    setTimeout(() => {
+      let modifiedBoardColors = boardColors;
+      let helper = modifiedBoardColors[first];
+      modifiedBoardColors[first] = boardColors[i];
+      modifiedBoardColors[i] = helper;
+      
+      if(checkColors(i)){
+        console.log("vadsvdassadvav");
+        setFirst(null);
+        setSecond(null);
+        setBoardColors(modifiedBoardColors);
+        setBoardClicks(Array(100).fill(false));
+        setNext(0);
+        setBoardMovers(Array(100).fill(""));
+      }else{
+        console.log("zxcccccccccccccccccc");
+        let modifiedBoardMovers = Array(100).fill("");
+        modifiedBoardMovers[first] = colorMover(firstPosition, rect);
+        modifiedBoardMovers[i] = colorMover(rect, firstPosition);
+        setBoardMovers(modifiedBoardMovers);
+
+        setTimeout(() => {
+          setFirst(null);
+          setSecond(null);
+          setBoardColors(boardColors);
+          setBoardClicks(Array(100).fill(false));
+          setNext(0);
+          setBoardMovers(Array(100).fill(""));
+        }, 950);
+      }
+      setBoardMovers(Array(100).fill(""));
+    }, 950);
   }
+  
   function failedTransition() 
   {
     setFirst(null);
@@ -108,59 +160,54 @@ const Board = () => {
     setBoardClicks(Array(100).fill(false));
     setNext(0);
   }
+  
   function checkColors(i){
-    // console.log("0");
-    // console.log("kek",i);
-    // console.log(boardColors[i]);
-    // console.log(boardColors[i+1]);
-    // console.log(boardColors[i+2]);
     if(boardColors[i] === boardColors[i + 1] && boardColors[i + 1] === boardColors[i + 2]){
-      // console.log("1");
       let modifiedBoardColors = boardColors;
       modifiedBoardColors[i] = null;
       modifiedBoardColors[i + 1] = null;
       modifiedBoardColors[i + 2] = null;
       setBoardColors(modifiedBoardColors);
-      setNewColors();
+      setNewColors(boardColors);
+      setBoardColors(randomNumberToColor(boardColors)); // WTF
+      return true;
     }else if(boardColors[i] === boardColors[i - 1] && boardColors[i - 1] === boardColors[i - 2]){
-      // console.log("2");
       let modifiedBoardColors = boardColors;
       modifiedBoardColors[i] = null;
       modifiedBoardColors[i - 1] = null;
       modifiedBoardColors[i - 2] = null;
       setBoardColors(modifiedBoardColors);
-      setNewColors();
+      setNewColors(boardColors);
+      setBoardColors(randomNumberToColor(boardColors)); // WTF
+      return true;
     }else if(boardColors[i] === boardColors[i + 10] && boardColors[i + 10] === boardColors[i + 20]){
-      // console.log("3");
       let modifiedBoardColors = boardColors;
       modifiedBoardColors[i] = null;
       modifiedBoardColors[i + 10] = null;
       modifiedBoardColors[i + 20] = null;
       setBoardColors(modifiedBoardColors);
-      setNewColors();
+      setNewColors(boardColors);
+      setBoardColors(randomNumberToColor(boardColors)); // WTF
+      return true;
     }else if(boardColors[i] === boardColors[i - 10] && boardColors[i - 10] === boardColors[i - 20]){
-      // console.log("4");
       let modifiedBoardColors = boardColors;
       modifiedBoardColors[i] = null;
       modifiedBoardColors[i - 10] = null;
       modifiedBoardColors[i - 20] = null;
       setBoardColors(modifiedBoardColors);
-      setNewColors();
+      setNewColors(boardColors);
+      setBoardColors(randomNumberToColor(boardColors)); // WTF
+      return true;
     }
+    return false;
   }
 
-  function setNewColors(){
-    let modifiedBoardColors = boardColors;
-    for(let number in boardColors){
-      if(boardColors[number] === null){
-        modifiedBoardColors[number] = Math.floor(Math.random() * 81) + 20;
-        console.log(number, modifiedBoardColors[number]);
-      }
-    }
-    setBoardColors(modifiedBoardColors);
-    modifiedBoardColors = Newcolorszzz(boardColors);
-    setBoardColors(modifiedBoardColors);
+  function RenderSquare(i){
+    return(
+      <Square id={i} sign={boardColors[i]} squareClicked={boardClicks[i]} styles={boardMovers[i]} onClick={(event) => handleSquareClick(i, event)}/>
+    );
   }
+  
   return ( 
     <div className="game">
       <div className="board">
